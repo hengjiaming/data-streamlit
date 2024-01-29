@@ -8,6 +8,13 @@ from data_processors.quarterly_status import QuartStatus
 from data_processors.quarterly_cases import QuartCases
 from data_processors.workerload import WorkerLoad
 from data_processors.monthly import MonthlyAnalysis
+from data_processors.status_by_group import StatusGroups
+from data_processors.status_by_group import StatusWorkers
+from data_processors.distribution import GenderDistribution
+from data_processors.distribution import RaceDistribution
+from data_processors.distribution import AgeDistribution
+from data_processors.distribution import AreaDistribution
+from data_processors.referral_count import Referrals
 
 # Page configuration
 st.set_page_config(page_title="Data Analysis Dashboard", page_icon="📊", layout="wide")
@@ -35,11 +42,16 @@ st.markdown('''
 <li class="big-font">Current Worker (Initials)</li>
 <li class="big-font">Group Name</li>
 <li class="big-font">Registration Status</li>
+<li class="big-font">Gender</li>
+<li class="big-font">Race</li>
+<li class="big-font">Current Age (Year of Data Entry)</li>
+<li class="big-font">Area (Usual Hangout)</li>
 <li class="big-font">PC Date In</li>
 <li class="big-font">PC Date Out</li>
 <li class="big-font">SC/SCP Date In</li>
 <li class="big-font">Date of Parental Consent</li>
 <li class="big-font">SC/SCP Date Out</li>
+<li class="big-font">Referral Date (Date received)</li>
 ''', unsafe_allow_html=True)
 
 # File Uploader
@@ -59,10 +71,10 @@ if file_uploader:
     group_counts = df_filtered['Group Name'].value_counts()
 
     # Sidebar filter component
-    st.sidebar.header("Filters")
-    if 'Group Name' in df:
-        selected_group = st.sidebar.selectbox("Select a Group", df['Group Name'].unique())
-        # Use this selection to filter data or modify charts
+    # st.sidebar.header("Filters")
+    # if 'Group Name' in df:
+    #     selected_group = st.sidebar.selectbox("Select a Group", df['Group Name'].unique())
+    #     # Use this selection to filter data or modify charts
 
     # Function to plot cases by group in current month
     CasesByGroup(df, group_counts)
@@ -79,6 +91,19 @@ if file_uploader:
     # Function to display monthly analysis
     MonthlyAnalysis(df)
 
+    # Function to display status by groups
+    StatusGroups(df)
 
+    # Function to display status by workers
+    StatusWorkers(df)
+
+    # Function to display distributions
+    GenderDistribution(df)
+    RaceDistribution(df)
+    AgeDistribution(df)
+    AreaDistribution(df)
+
+    # Function to show referral count
+    Referrals(df)
 
 

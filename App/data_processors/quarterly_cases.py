@@ -24,6 +24,4 @@ def QuartCases(df):
     result['SCP'] = df[df['Registration Status'] == 'SCP'].groupby('SC/SCP Quarter').size().reindex(quarters_range, fill_value=0)
 
     st.markdown("### Data Table: Quarterly Case Count")
-    st.dataframe(result.style.set_properties(**{'background-color': 'lightgray', 
-                                                    'color': 'black', 
-                                                    'border-color': 'white'}))
+    st.dataframe(result)
