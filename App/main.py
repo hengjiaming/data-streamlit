@@ -13,6 +13,8 @@ from data_processors.status_by_group import StatusWorkers
 from data_processors.distribution import GenderDistribution
 from data_processors.distribution import RaceDistribution
 from data_processors.distribution import AgeDistribution
+from data_processors.distribution import AreaDistribution
+from data_processors.referral_count import Referrals
 
 # Page configuration
 st.set_page_config(page_title="Data Analysis Dashboard", page_icon="📊", layout="wide")
@@ -94,6 +96,9 @@ if file_uploader:
     GenderDistribution(df)
     RaceDistribution(df)
     AgeDistribution(df)
+    AreaDistribution(df)
 
+    # Function to show referral count
+    Referrals(df)
 
 
