@@ -42,11 +42,16 @@ st.markdown('''
 <li class="big-font">Current Worker (Initials)</li>
 <li class="big-font">Group Name</li>
 <li class="big-font">Registration Status</li>
+<li class="big-font">Gender</li>
+<li class="big-font">Race</li>
+<li class="big-font">Current Age (Year of Data Entry)</li>
+<li class="big-font">Area (Usual Hangout)</li>
 <li class="big-font">PC Date In</li>
 <li class="big-font">PC Date Out</li>
 <li class="big-font">SC/SCP Date In</li>
 <li class="big-font">Date of Parental Consent</li>
 <li class="big-font">SC/SCP Date Out</li>
+<li class="big-font">Referral Date (Date received)</li>
 ''', unsafe_allow_html=True)
 
 # File Uploader

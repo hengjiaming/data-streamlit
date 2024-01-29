@@ -13,3 +13,18 @@ data visualisation on streamlit
 3. Let the web application load and generate the analysis charts
 4. Download the necessary chart data before you close the application since no data is going to be stored.
 
+## Columns that must be present in Excel File
+1. Current Worker (Initials)
+2. Group Name
+3. Registration Status
+4. Gender
+5. Race
+6. Current Age (Year of Data Entry)
+7. Area (Usual Hangout)
+8. PC Date In
+9. PC Date Out
+10. SC/SCP Date In
+11. Date of Parental Consent
+12. SC/SCP Date Out
+13. Referral Date (Date received)
+
