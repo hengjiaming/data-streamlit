@@ -2,10 +2,12 @@
 data visualisation on streamlit
 
 ## Installation and Setup for Streamlit
-1. Install project dependencies: pip install -r requirements.txt
-2. Locate the directory of the python file, in this case, main.py, and cd into the directory: cd [directory path]
-3. Run the streamlit application on local host: streamlit run main.py
-4. Access deployed version of streamlit application: 
+1. Install python
+2. Open command prompt and cd into this project folder
+3. Install project dependencies: pip install -r requirements.txt
+4. Locate the directory of the python file, in this case, main.py, and cd into the directory: cd [directory path]
+5. Run the streamlit application on local host: streamlit run main.py
+6. Access deployed version of streamlit application: 
 
 ## Data Analysis on Streamlit App
 1. Access the deployed web application via URL:
