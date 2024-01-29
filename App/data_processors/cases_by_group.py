@@ -1,11 +1,13 @@
 import streamlit as st
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 def CasesByGroup(df, group_counts):
     st.markdown('### Cases Open by Group in Current Month')
-    plt.figure(figsize=(10, 6))
-    plt.pie(group_counts, labels=group_counts.index, autopct='%1.1f%%', startangle=140)
-    plt.axis('equal')
-    plt.title('Cases Open by Group in Current Month')
-    st.pyplot(plt.gcf())
+
+    # Create a pie chart using Plotly
+    fig = px.pie(group_counts, values=group_counts, names=group_counts.index, title='Cases Open by Group in Current Month')
+
+    # Show the figure in Streamlit
+    st.plotly_chart(fig)
+
     
