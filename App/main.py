@@ -7,6 +7,7 @@ from data_processors.cases_by_group import CasesByGroup
 from data_processors.quarterly_status import QuartStatus
 from data_processors.quarterly_cases import QuartCases
 from data_processors.workerload import WorkerLoad
+from data_processors.monthly import MonthlyAnalysis
 
 # Page configuration
 st.set_page_config(page_title="Data Analysis Dashboard", page_icon="📊", layout="wide")
@@ -57,6 +58,10 @@ if file_uploader:
 
     # Function to display workload per worker
     WorkerLoad(df)
+
+    # Function to display monthly analysis
+    MonthlyAnalysis(df)
+
 
 
 
