@@ -10,6 +10,9 @@ from data_processors.workerload import WorkerLoad
 from data_processors.monthly import MonthlyAnalysis
 from data_processors.status_by_group import StatusGroups
 from data_processors.status_by_group import StatusWorkers
+from data_processors.distribution import GenderDistribution
+from data_processors.distribution import RaceDistribution
+from data_processors.distribution import AgeDistribution
 
 # Page configuration
 st.set_page_config(page_title="Data Analysis Dashboard", page_icon="📊", layout="wide")
@@ -86,6 +89,11 @@ if file_uploader:
 
     # Function to display status by workers
     StatusWorkers(df)
+
+    # Function to display distributions
+    GenderDistribution(df)
+    RaceDistribution(df)
+    AgeDistribution(df)
 
 
 
