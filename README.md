@@ -2,7 +2,7 @@
 data visualisation on streamlit
 
 ## Installation and Setup for Streamlit
-1. Install Streamlit via: pip install streamlit
+1. Install project dependencies: pip install -r requirements.txt
 2. Locate the directory of the python file, in this case, main.py, and cd into the directory: cd [directory path]
 3. Run the streamlit application on local host: streamlit run main.py
 4. Access deployed version of streamlit application: 
