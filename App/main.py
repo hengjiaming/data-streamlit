@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import datetime
 from css import styles
 from data_processors.cases_by_group import CasesByGroup
