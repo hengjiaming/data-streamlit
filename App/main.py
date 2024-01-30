@@ -66,9 +66,11 @@ if file_uploader:
     df['SC/SCP Date In'] = pd.to_datetime(df['SC/SCP Date In'], errors='coerce')
     current_month = datetime.now().month
     current_year = datetime.now().year
+    print(current_month, current_year)
     df_filtered = df[df['SC/SCP Date In'].dt.month == current_month]
     df_filtered = df_filtered[df_filtered['SC/SCP Date In'].dt.year == current_year]
     group_counts = df_filtered['Group Name'].value_counts()
+    print(group_counts)
 
     # Sidebar filter component
     # st.sidebar.header("Filters")

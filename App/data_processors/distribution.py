@@ -34,8 +34,14 @@ def RaceDistribution(df):
     st.plotly_chart(fig)
 
 def AgeDistribution(df):
-    # Extract age and year of data entry
-    df[['Original Age', 'Year of Data Entry']] = df['Current Age (Year of Data Entry)'].str.extract(r'(\d+) \((\d+)\)').astype(int)
+    # Extract age and year of data entry, handling NaN values
+    df[['Original Age', 'Year of Data Entry']] = df['Current Age (Year of Data Entry)'].str.extract(r'(\d+) \((\d+)\)')
+    
+    # Drop rows where either 'Original Age' or 'Year of Data Entry' is NaN
+    df = df.dropna(subset=['Original Age', 'Year of Data Entry'])
+
+    # Convert to integer
+    df[['Original Age', 'Year of Data Entry']] = df[['Original Age', 'Year of Data Entry']].astype(int)
 
     # Update age based on the current year
     current_year = datetime.now().year
@@ -51,16 +57,16 @@ def AgeDistribution(df):
     # Count the occurrences of each age range
     age_range_counts = df['Age Range'].value_counts()
 
-    # Create a pie chart
+    # Create and display a pie chart (assuming you are using Plotly Express)
     fig = px.pie(age_range_counts, values=age_range_counts, names=age_range_counts.index, title='Age Range Distribution',
                  hole=.3, labels={'index':'Age Range', 'value':'Count'})
-
-    # Show absolute numbers and percentages in the pie chart
     fig.update_traces(textinfo='label+percent+value')
+    st.plotly_chart(fig)
 
     # Display the new result table in Streamlit
     st.markdown("### Age Range Distribution for Cases")
     st.plotly_chart(fig)
+
 
 def AreaDistribution(df):
     # Count the occurrences of each area
