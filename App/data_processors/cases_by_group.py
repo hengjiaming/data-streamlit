@@ -22,9 +22,13 @@ def CasesByGroup(df):
     group_counts = open_cases_current_month['Group Name'].value_counts()
 
     st.markdown('### Cases Open by Group in Current Month')
-    # Create a pie chart using Plotly
-    fig = px.pie(group_counts, values=group_counts.values, names=group_counts.index, 
-                 title='Cases Open by Group in Current Month')
-
-    # Show the figure in Streamlit
-    st.plotly_chart(fig)
+    
+    # Check if group_counts is empty
+    if group_counts.empty:
+        st.write("No Data Found")  # Display message if no data
+    else:
+        # Create a pie chart using Plotly
+        fig = px.pie(group_counts, values=group_counts.values, names=group_counts.index, 
+                     title='Cases Open by Group in Current Month')
+        # Show the figure in Streamlit
+        st.plotly_chart(fig)

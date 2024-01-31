@@ -14,7 +14,6 @@ def WorkerLoad(df):
     # Creating dataframe for worker load
     worker_stats = pd.DataFrame({
         'Worker': total_cases.index,
-        'Total Number of Cases': total_cases.values,
         'Number of Cases In': cases_in.reindex(total_cases.index, fill_value=0).values,
         'Number of Cases Closed': cases_closed.reindex(total_cases.index, fill_value=0).values
     })
