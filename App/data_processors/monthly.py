@@ -1,57 +1,51 @@
 import pandas as pd
 import streamlit as st
 
-def MonthlyAnalysis(df):
+def CombinedMonthlyStatusAndCases(df):
     # Convert date columns to datetime
-    df['PC Date In'] = pd.to_datetime(df['PC Date In'], errors='coerce')
-    df['SC/SCP Date Out'] = pd.to_datetime(df['SC/SCP Date Out'], errors='coerce')
+    date_columns = ['PC Date In', 'PC Date Out', 'SC/SCP Date In', 'SC/SCP Date Out', 'SCP Date In']
+    for col in date_columns:
+        df[col] = pd.to_datetime(df[col], errors='coerce')
+    
+    # Extract months
+    df['PC Month In'] = df['PC Date In'].dt.to_period('M')
+    df['PC Month Out'] = df['PC Date Out'].dt.to_period('M')
+    df['SC/SCP Month In'] = df['SC/SCP Date In'].dt.to_period('M')
+    df['SC/SCP Month Out'] = df['SC/SCP Date Out'].dt.to_period('M')
+    df['SCP Month In'] = df['SCP Date In'].dt.to_period('M')
 
-    # Drop rows where 'PC Date In' is NaT
-    df = df.dropna(subset=['PC Date In'])
+    # Determine the range of months in the data
+    min_month = df[date_columns].min().min().to_period('M')
+    max_month = df[date_columns].max().max().to_period('M')
+    months_range = pd.period_range(start=min_month, end=max_month, freq='M')
 
-    # Set a default start and end date if they are NaT
-    start_date = df['PC Date In'].min() if pd.notnull(df['PC Date In'].min()) else pd.Timestamp.now()
-    end_date = df['SC/SCP Date Out'].max() if pd.notnull(df['SC/SCP Date Out'].max()) else pd.Timestamp.now()
-    df['SC/SCP Date In'] = pd.to_datetime(df['SC/SCP Date In'], errors='coerce')
-    df['Date of Parental Consent'] = pd.to_datetime(df['Date of Parental Consent'], errors='coerce')
+    # Initialize a DataFrame to store the results
+    combined_results = pd.DataFrame(index=months_range.strftime('%Y-%m'))
 
-    # Determine the range of dates to analyze
-    monthly_range = pd.date_range(start=start_date, end=end_date, freq='M')
+    # Calculate cumulative and in/out counts for each status
+    # Cumulative counts
+    for month in months_range:
+        combined_results.at[month.strftime('%Y-%m'), 'PC'] = df[(df['PC Month In'] <= month) & 
+                                                                ((df['PC Month Out'] > month) | pd.isna(df['PC Month Out'])) & 
+                                                                (df['SC/SCP Month In'] > month)].shape[0]
+        combined_results.at[month.strftime('%Y-%m'), 'SC'] = df[(df['SC/SCP Month In'] <= month) & 
+                                                                ((df['SCP Month In'] > month) | pd.isna(df['SCP Month In']))].shape[0]
+        combined_results.at[month.strftime('%Y-%m'), 'SCP'] = df[df['SCP Month In'] <= month].shape[0]
+        combined_results.at[month.strftime('%Y-%m'), 'SC + SCP'] = combined_results.at[month.strftime('%Y-%m'), 'SC'] + combined_results.at[month.strftime('%Y-%m'), 'SCP']
+        combined_results.at[month.strftime('%Y-%m'), 'SC to SCP Transitions'] = df[(df['SC/SCP Month In'] < month) & 
+                                                                                   (df['SCP Month In'] == month)].shape[0]
 
-    # List to hold monthly data
-    monthly_records = []
-
-    # Analyze data for each month
-    for month_end in monthly_range:
-        month_start = month_end.replace(day=1)
-
-        # Number of open cases
-        open_cases = df[(df['PC Date In'] <= month_end) & 
-                        ((df['SC/SCP Date Out'] > month_end) | pd.isnull(df['SC/SCP Date Out']))].shape[0]
-
-        # Number of new cases
-        new_cases = df[(df['PC Date In'] >= month_start) & (df['PC Date In'] <= month_end)].shape[0]
-
-        # Number of closed cases
-        closed_cases = df[(df['SC/SCP Date Out'] >= month_start) & (df['SC/SCP Date Out'] <= month_end)].shape[0]
-
-        # Number of SC to SCP transitions
-        sc_to_scp_transitions = df[(df['SC/SCP Date In'] >= month_start) & 
-                                   (df['SC/SCP Date In'] <= month_end) &
-                                   (df['Date of Parental Consent'] > df['SC/SCP Date In'])].shape[0]
-
-        # Add the data to the list
-        monthly_records.append({
-            'Month': month_end.strftime('%Y-%m'),
-            'Open Cases': open_cases,
-            'New Cases': new_cases,
-            'Closed Cases': closed_cases,
-            'SC to SCP': sc_to_scp_transitions
-        })
-
-    # Convert the list of dictionaries to a DataFrame
-    monthly_data = pd.DataFrame(monthly_records)
-
+    # In/Out counts
+    combined_results['PC Ins'] = df.groupby('PC Month In').size().reindex(months_range, fill_value=0).values
+    combined_results['PC Outs'] = df.groupby('PC Month Out').size().reindex(months_range, fill_value=0).values
+    combined_results['SC Ins'] = df.groupby('SC/SCP Month In').size().reindex(months_range, fill_value=0).values
+    combined_results['SC Outs'] = df.groupby('SC/SCP Month Out').size().reindex(months_range, fill_value=0).values
+    combined_results['SCP Ins'] = df.groupby('SCP Month In').size().reindex(months_range, fill_value=0).values
+    
     # Display the new result table in Streamlit
-    st.markdown("### Monthly Case Analysis")
-    st.dataframe(monthly_data)
+    st.markdown("### Combined Monthly Status and Case Counts")
+    st.dataframe(combined_results)
+
+# Example usage:
+# df = pd.read_csv("your_data.csv")  # Make sure to load your data
+# CombinedMonthlyStatusAndCases(df)

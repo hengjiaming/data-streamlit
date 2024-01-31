@@ -7,12 +7,12 @@ def StatusGroups(df):
     df['PC Date Out'] = pd.to_datetime(df['PC Date Out'], errors='coerce')
     df['SC/SCP Date In'] = pd.to_datetime(df['SC/SCP Date In'], errors='coerce')
     df['SC/SCP Date Out'] = pd.to_datetime(df['SC/SCP Date Out'], errors='coerce')
-    df['Date of Parental Consent'] = pd.to_datetime(df['Date of Parental Consent'], errors='coerce')
+    df['SCP Date In'] = pd.to_datetime(df['SCP Date In'], errors='coerce')
 
     # Filter for PC, SC, SCP cases
     pc_cases = df[pd.isnull(df['PC Date Out']) & pd.notnull(df['PC Date In'])]
-    sc_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.isnull(df['Date of Parental Consent'])]
-    scp_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.notnull(df['Date of Parental Consent'])]
+    sc_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.isnull(df['SCP Date In'])]
+    scp_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.notnull(df['SCP Date In'])]
 
     # Group by 'Group Name' and count cases
     pc_counts = pc_cases.groupby('Group Name').size().rename('PC')
@@ -32,12 +32,12 @@ def StatusWorkers(df):
     df['PC Date Out'] = pd.to_datetime(df['PC Date Out'], errors='coerce')
     df['SC/SCP Date In'] = pd.to_datetime(df['SC/SCP Date In'], errors='coerce')
     df['SC/SCP Date Out'] = pd.to_datetime(df['SC/SCP Date Out'], errors='coerce')
-    df['Date of Parental Consent'] = pd.to_datetime(df['Date of Parental Consent'], errors='coerce')
+    df['SCP Date In'] = pd.to_datetime(df['SCP Date In'], errors='coerce')
 
     # Filter for PC, SC, SCP cases
     pc_cases = df[pd.isnull(df['PC Date Out']) & pd.notnull(df['PC Date In'])]
-    sc_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.isnull(df['Date of Parental Consent'])]
-    scp_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.notnull(df['Date of Parental Consent'])]
+    sc_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.isnull(df['SCP Date In'])]
+    scp_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.notnull(df['SCP Date In'])]
 
     # Group by 'Worker' and count cases
     pc_counts = pc_cases.groupby('Current Worker (Initials)').size().rename('PC Count')

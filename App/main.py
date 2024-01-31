@@ -4,9 +4,10 @@ from datetime import datetime
 from css import styles
 from data_processors.cases_by_group import CasesByGroup
 from data_processors.quarterly_status import QuartStatus
-from data_processors.quarterly_cases import QuartCases
+from data_processors.monthly_status import MonthlyStatus
+from data_processors.monthly_cases import MonthlyCases
 from data_processors.workerload import WorkerLoad
-from data_processors.monthly import MonthlyAnalysis
+from data_processors.monthly import CombinedMonthlyStatusAndCases
 from data_processors.status_by_group import StatusGroups
 from data_processors.status_by_group import StatusWorkers
 from data_processors.distribution import GenderDistribution
@@ -44,11 +45,11 @@ st.markdown('''
 <li class="big-font">Gender</li>
 <li class="big-font">Race</li>
 <li class="big-font">Current Age (Year of Data Entry)</li>
-<li class="big-font">Area (Usual Hangout)</li>
+<li class="big-font">SSO Region (usual hangout)</li>
 <li class="big-font">PC Date In</li>
 <li class="big-font">PC Date Out</li>
 <li class="big-font">SC/SCP Date In</li>
-<li class="big-font">Date of Parental Consent</li>
+<li class="big-font">SCP Date In</li>
 <li class="big-font">SC/SCP Date Out</li>
 <li class="big-font">Referral Date (Date received)</li>
 ''', unsafe_allow_html=True)
@@ -62,35 +63,20 @@ if file_uploader:
 
     # Data processing steps
     df = df.fillna("NIL")
-    df['SC/SCP Date In'] = pd.to_datetime(df['SC/SCP Date In'], errors='coerce')
-    current_month = datetime.now().month
-    current_year = datetime.now().year
-    print(current_month, current_year)
-    df_filtered = df[df['SC/SCP Date In'].dt.month == current_month]
-    df_filtered = df_filtered[df_filtered['SC/SCP Date In'].dt.year == current_year]
-    group_counts = df_filtered['Group Name'].value_counts()
-    print(group_counts)
-
-    # Sidebar filter component
-    # st.sidebar.header("Filters")
-    # if 'Group Name' in df:
-    #     selected_group = st.sidebar.selectbox("Select a Group", df['Group Name'].unique())
-    #     # Use this selection to filter data or modify charts
+    for col in ['PC Date In', 'PC Date Out', 'SC/SCP Date In', 'SC/SCP Date Out', 'SCP Date In']:
+        df[col] = pd.to_datetime(df[col], errors='coerce')
 
     # Function to plot cases by group in current month
-    CasesByGroup(df, group_counts)
+    CasesByGroup(df)
 
-    # Function to plot quarterly cases
-    QuartCases(df)
-
-    # Function to generate quarterly status table
-    QuartStatus(df)
+    # Function to display monthly analysis
+    CombinedMonthlyStatusAndCases(df)
 
     # Function to display workload per worker
     WorkerLoad(df)
 
     # Function to display monthly analysis
-    MonthlyAnalysis(df)
+    CombinedMonthlyStatusAndCases(df)
 
     # Function to display status by groups
     StatusGroups(df)

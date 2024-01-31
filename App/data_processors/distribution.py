@@ -4,11 +4,16 @@ import streamlit as st
 from datetime import datetime
 
 def GenderDistribution(df):
+    # Normalize the Gender column: trim whitespace and unify categories
+    df['Gender'] = df['Gender'].str.replace('\xa0', '')  # Replace non-breaking spaces
+    df['Gender'] = df['Gender'].str.strip()  # Trim leading/trailing whitespace
+    df['Gender'] = df['Gender'].replace({'M': 'Male', 'F': 'Female'}).fillna('NIL')
+
     # Count the occurrences of each gender
     gender_counts = df['Gender'].value_counts()
 
     # Create a pie chart
-    fig = px.pie(gender_counts, values=gender_counts, names=gender_counts.index, title='Gender Distribution',
+    fig = px.pie(gender_counts, values=gender_counts.values, names=gender_counts.index, title='Gender Distribution',
                  hole=.3, labels={'index':'Gender', 'value':'Count'})
 
     # Show absolute numbers in the pie chart
@@ -67,18 +72,27 @@ def AgeDistribution(df):
     st.markdown("### Age Range Distribution for Cases")
     st.plotly_chart(fig)
 
-
 def AreaDistribution(df):
     # Count the occurrences of each area
-    area_counts = df['Area (Usual Hangout)'].value_counts()
+    area_counts = df['SSO Region (usual hangout)'].value_counts().reset_index()
+    area_counts.columns = ['Area', 'Count']
 
-    # Create a pie chart
-    fig = px.pie(area_counts, values=area_counts, names=area_counts.index, title='Distribution by Area',
-                 hole=.3, labels={'index':'Area', 'value':'Count'})
+    # Create a horizontal bar chart
+    fig = px.bar(area_counts, y='Area', x='Count', title='Distribution by Area',
+                 orientation='h',  # Make the bar chart horizontal
+                 labels={'Area':'SSO Region (Usual Hangout)', 'Count':'Count'},
+                 text='Count')  # Display count as text on the bars
 
-    # Show absolute numbers and percentages in the pie chart
-    fig.update_traces(textinfo='label+percent+value')
+    # Sort bars by count
+    fig.update_layout(yaxis={'categoryorder':'total ascending'})
+    
+    # Show the text on the bars
+    fig.update_traces(texttemplate='%{text}', textposition='outside')
+
+    # Adjust layout for readability and to accommodate text
+    fig.update_layout(height=400 + 20 * len(area_counts),  # Adjust height based on number of bars
+                      margin=dict(l=10, r=10, t=50, b=10))
 
     # Display the new result table in Streamlit
-    st.markdown("### Area (Usual Hangout) Distribution for Cases")
+    st.markdown("### SSO Region (Usual Hangout) Distribution for Cases")
     st.plotly_chart(fig)
