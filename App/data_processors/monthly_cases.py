@@ -23,6 +23,9 @@ def MonthlyCases(df):
     result['SC'] = df[df['Registration Status'] == 'SC'].groupby('SC/SCP Month').size().reindex(months_range, fill_value=0)
     result['SCP'] = df[df['Registration Status'] == 'SCP'].groupby('SC/SCP Month').size().reindex(months_range, fill_value=0)
 
+    # Add a new column for SC + SCP
+    result['SC + SCP'] = result['SC'] + result['SCP']
+
     # Format the index to 'YYYY-MM'
     result.index = result.index.strftime('%Y-%m')
 

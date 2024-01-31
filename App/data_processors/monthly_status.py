@@ -13,7 +13,6 @@ def MonthlyStatus(df):
     df['SC Out Month'] = df['SC/SCP Date Out'].dt.to_period('M')
     df['SCP In Month'] = df['SC/SCP Date Out'].dt.to_period('M')
     df['SCP Out Month'] = df['SC/SCP Date Out'].dt.to_period('M')
-    df['Case Closed Month'] = df['SC/SCP Date Out'].dt.to_period('M')
 
     # Determine the range of months in the data
     all_months = pd.period_range(start=df[date_columns].min().min(), end=df[date_columns].max().max(), freq='M')
@@ -33,7 +32,6 @@ def MonthlyStatus(df):
 
     monthly_status_counts['SC Outs'] = sc_df.groupby('SC Out Month').size().reindex(all_months, fill_value=0)
     monthly_status_counts['SCP Outs'] = scp_df.groupby('SCP Out Month').size().reindex(all_months, fill_value=0)
-    monthly_status_counts['Case Closed'] = df.groupby('Case Closed Month').size().reindex(all_months, fill_value=0)
 
     monthly_status_counts.index = monthly_status_counts.index.strftime('%Y-%m')
 
