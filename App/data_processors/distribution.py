@@ -70,7 +70,7 @@ def AgeDistribution(df):
 
 def AreaDistribution(df):
     # Count the occurrences of each area
-    area_counts = df['Area (Usual Hangout)'].value_counts()
+    area_counts = df['SSO Region (usual hangout)'].value_counts()
 
     # Create a pie chart
     fig = px.pie(area_counts, values=area_counts, names=area_counts.index, title='Distribution by Area',
@@ -80,5 +80,5 @@ def AreaDistribution(df):
     fig.update_traces(textinfo='label+percent+value')
 
     # Display the new result table in Streamlit
-    st.markdown("### Area (Usual Hangout) Distribution for Cases")
+    st.markdown("### SSO Region (Usual Hangout) Distribution for Cases")
     st.plotly_chart(fig)
