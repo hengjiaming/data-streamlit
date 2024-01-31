@@ -13,7 +13,7 @@ def MonthlyAnalysis(df):
     start_date = df['PC Date In'].min() if pd.notnull(df['PC Date In'].min()) else pd.Timestamp.now()
     end_date = df['SC/SCP Date Out'].max() if pd.notnull(df['SC/SCP Date Out'].max()) else pd.Timestamp.now()
     df['SC/SCP Date In'] = pd.to_datetime(df['SC/SCP Date In'], errors='coerce')
-    df['Date of Parental Consent'] = pd.to_datetime(df['Date of Parental Consent'], errors='coerce')
+    df['SCP Date In'] = pd.to_datetime(df['SCP Date In'], errors='coerce')
 
     # Determine the range of dates to analyze
     monthly_range = pd.date_range(start=start_date, end=end_date, freq='M')
@@ -38,7 +38,7 @@ def MonthlyAnalysis(df):
         # Number of SC to SCP transitions
         sc_to_scp_transitions = df[(df['SC/SCP Date In'] >= month_start) & 
                                    (df['SC/SCP Date In'] <= month_end) &
-                                   (df['Date of Parental Consent'] > df['SC/SCP Date In'])].shape[0]
+                                   (df['SCP Date In'] > df['SC/SCP Date In'])].shape[0]
 
         # Add the data to the list
         monthly_records.append({
