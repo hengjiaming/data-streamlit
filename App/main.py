@@ -4,7 +4,8 @@ from datetime import datetime
 from css import styles
 from data_processors.cases_by_group import CasesByGroup
 from data_processors.quarterly_status import QuartStatus
-from data_processors.quarterly_cases import QuartCases
+from data_processors.monthly_status import MonthlyStatus
+from data_processors.monthly_cases import MonthlyCases
 from data_processors.workerload import WorkerLoad
 from data_processors.monthly import MonthlyAnalysis
 from data_processors.status_by_group import StatusGroups
@@ -80,11 +81,11 @@ if file_uploader:
     # Function to plot cases by group in current month
     CasesByGroup(df, group_counts)
 
-    # Function to plot quarterly cases
-    QuartCases(df)
+    # Function to plot monthly cases
+    MonthlyCases(df)
 
-    # Function to generate quarterly status table
-    QuartStatus(df)
+    # Function to generate monthly status table
+    MonthlyStatus(df)
 
     # Function to display workload per worker
     WorkerLoad(df)
