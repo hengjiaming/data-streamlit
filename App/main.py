@@ -66,31 +66,54 @@ if file_uploader:
     for col in ['PC Date In', 'PC Date Out', 'SC/SCP Date In', 'SC/SCP Date Out', 'SCP Date In']:
         df[col] = pd.to_datetime(df[col], errors='coerce')
 
-    # Function to plot cases by group in current month
-    CasesByGroup(df)
+    # Assuming your file uploading and data preprocessing steps are unchanged
 
-    # Function to display monthly analysis
-    CombinedMonthlyStatusAndCases(df)
+    # Function calls with error handling
+    functions_to_execute = [
+        (CasesByGroup, "Cases by Group"),
+        (CombinedMonthlyStatusAndCases, "Monthly Status and Cases"),
+        (WorkerLoad, "Worker Load"),
+        (StatusGroups, "Status by Groups"),
+        (StatusWorkers, "Status by Workers"),
+        (GenderDistribution, "Gender Distribution"),
+        (RaceDistribution, "Race Distribution"),
+        (AgeDistribution, "Age Distribution"),
+        (AreaDistribution, "Area Distribution"),
+        (Referrals, "Referral Count")
+    ]
 
-    # Function to display workload per worker
-    WorkerLoad(df)
+    for func, title in functions_to_execute:
+        try:
+            func(df)  # Attempt to execute the function with df as argument
+        except Exception as e:
+            st.error(f"Error in {title}: {e}")  # Display an error message specific to the function
 
-    # Function to display monthly analysis
-    CombinedMonthlyStatusAndCases(df)
 
-    # Function to display status by groups
-    StatusGroups(df)
+    # # Function to plot cases by group in current month
+    # CasesByGroup(df)
 
-    # Function to display status by workers
-    StatusWorkers(df)
+    # # Function to display monthly analysis
+    # CombinedMonthlyStatusAndCases(df)
 
-    # Function to display distributions
-    GenderDistribution(df)
-    RaceDistribution(df)
-    AgeDistribution(df)
-    AreaDistribution(df)
+    # # Function to display workload per worker
+    # WorkerLoad(df)
 
-    # Function to show referral count
-    Referrals(df)
+    # # Function to display monthly analysis
+    # CombinedMonthlyStatusAndCases(df)
+
+    # # Function to display status by groups
+    # StatusGroups(df)
+
+    # # Function to display status by workers
+    # StatusWorkers(df)
+
+    # # Function to display distributions
+    # GenderDistribution(df)
+    # RaceDistribution(df)
+    # AgeDistribution(df)
+    # AreaDistribution(df)
+
+    # # Function to show referral count
+    # Referrals(df)
 
 

@@ -20,8 +20,12 @@ def GenderDistribution(df):
     fig.update_traces(textinfo='label+percent+value')
 
     # Display the new result table in Streamlit
-    st.markdown("### Gender Distribution for Cases")
-    st.plotly_chart(fig)
+    if gender_counts.empty:
+        st.markdown("### Gender Distribution for Cases")
+        st.write("No Data Found")
+    else:
+        st.markdown("### Gender Distribution for Cases")
+        st.plotly_chart(fig)
 
 def RaceDistribution(df):
     # Count the occurrences of each race
@@ -35,8 +39,12 @@ def RaceDistribution(df):
     fig.update_traces(textinfo='label+percent+value')
 
     # Display the new result table in Streamlit
-    st.markdown("### Race Distribution for Cases")
-    st.plotly_chart(fig)
+    if race_counts.empty:
+        st.markdown("### Race Distribution for Cases")
+        st.write("No Data Found")
+    else:
+        st.markdown("### Race Distribution for Cases")
+        st.plotly_chart(fig)
 
 def AgeDistribution(df):
     # Extract age and year of data entry, handling NaN values
@@ -69,8 +77,12 @@ def AgeDistribution(df):
     st.plotly_chart(fig)
 
     # Display the new result table in Streamlit
-    st.markdown("### Age Range Distribution for Cases")
-    st.plotly_chart(fig)
+    if age_range_counts.empty:
+        st.markdown("### Age Range Distribution for Cases")
+        st.write("No Data Found")
+    else:
+        st.markdown("### Age Range Distribution for Cases")
+        st.plotly_chart(fig)
 
 def AreaDistribution(df):
     # Count the occurrences of each area
@@ -94,5 +106,9 @@ def AreaDistribution(df):
                       margin=dict(l=10, r=10, t=50, b=10))
 
     # Display the new result table in Streamlit
-    st.markdown("### SSO Region (Usual Hangout) Distribution for Cases")
-    st.plotly_chart(fig)
+    if area_counts.empty:
+        st.markdown("### SSO Region (Usual Hangout) Distribution for Cases")
+        st.write("No Data Found")
+    else:
+        st.markdown("### SSO Region (Usual Hangout) Distribution for Cases")
+        st.plotly_chart(fig)
