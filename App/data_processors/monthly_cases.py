@@ -7,31 +7,38 @@ def MonthlyCases(df):
     df['PC Date Out'] = pd.to_datetime(df['PC Date Out'], errors='coerce')
     df['SC/SCP Date In'] = pd.to_datetime(df['SC/SCP Date In'], errors='coerce')
     df['SC/SCP Date Out'] = pd.to_datetime(df['SC/SCP Date Out'], errors='coerce')
+    df['SCP Date In'] = pd.to_datetime(df['SCP Date In'], errors='coerce')
 
     # Extract months
-    df['PC Month'] = df['PC Date In'].dt.to_period('M')
-    df['SC/SCP Month'] = df['SC/SCP Date In'].dt.to_period('M')
+    df['PC Month In'] = df['PC Date In'].dt.to_period('M')
+    df['PC Month Out'] = df['PC Date Out'].dt.to_period('M')
+    df['SC/SCP Month In'] = df['SC/SCP Date In'].dt.to_period('M')
+    df['SCP Month In'] = df['SCP Date In'].dt.to_period('M')
 
     # Determine the range of months in the data
-    min_month = min(df['PC Month'].min(), df['SC/SCP Month'].min())
-    max_month = max(df['PC Month'].max(), df['SC/SCP Month'].max())
+    min_month = df[['PC Month In', 'SC/SCP Month In', 'SCP Month In']].min().min()
+    max_month = df[['PC Month In', 'SC/SCP Month In', 'SCP Month In']].max().max()
     months_range = pd.period_range(start=min_month, end=max_month, freq='M')
-
-     # Filter for PC, SC, SCP cases
-    pc_cases = df[pd.isnull(df['PC Date Out']) & pd.notnull(df['PC Date In'])]
-    sc_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.isnull(df['SCP Date In'])]
-    scp_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.notnull(df['SCP Date In'])]
 
     # Initialize a DataFrame to store the results
     result = pd.DataFrame(index=months_range)
 
-    # Count PC, SC, SCP cases for each month
-    result['PC'] = pc_cases.groupby('PC Month').size().reindex(months_range, fill_value=0)
-    result['SC'] = sc_cases.groupby('SC/SCP Month').size().reindex(months_range, fill_value=0)
-    result['SCP'] = scp_cases.groupby('SC/SCP Month').size().reindex(months_range, fill_value=0)
+    # Calculate cumulative counts for each status
+    for month in months_range:
+        # PC cases are those entered as PC and not yet out or moved to SC/SCP
+        result.at[month, 'PC'] = df[(df['PC Month In'] <= month) & 
+                                    ((df['PC Month Out'] > month) | pd.isna(df['PC Month Out'])) & 
+                                    (df['SC/SCP Month In'] > month)].shape[0]
 
-    # Add a new column for SC + SCP
-    result['SC + SCP'] = result['SC'] + result['SCP']
+        # SC cases are those entered as SC/SCP but not SCP yet
+        result.at[month, 'SC'] = df[(df['SC/SCP Month In'] <= month) & 
+                                    ((df['SCP Month In'] > month) | pd.isna(df['SCP Month In']))].shape[0]
+
+        # SCP cases are those with SCP Date In
+        result.at[month, 'SCP'] = df[df['SCP Month In'] <= month].shape[0]
+
+        # SC + SCP cases are the sum of SC and SCP
+        result.at[month, 'SC + SCP'] = result.at[month, 'SC'] + result.at[month, 'SCP']
 
     # Format the index to 'YYYY-MM'
     result.index = result.index.strftime('%Y-%m')
