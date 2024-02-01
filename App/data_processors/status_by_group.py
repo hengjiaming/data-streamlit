@@ -1,18 +1,27 @@
 import pandas as pd
 import streamlit as st
+from datetime import datetime
 
 def StatusGroups(df):
-    # Ensure proper datetime format for all date columns
-    df['PC Date In'] = pd.to_datetime(df['PC Date In'], errors='coerce')
-    df['PC Date Out'] = pd.to_datetime(df['PC Date Out'], errors='coerce')
-    df['SC/SCP Date In'] = pd.to_datetime(df['SC/SCP Date In'], errors='coerce')
-    df['SC/SCP Date Out'] = pd.to_datetime(df['SC/SCP Date Out'], errors='coerce')
-    df['SCP Date In'] = pd.to_datetime(df['SCP Date In'], errors='coerce')
+   # Convert date columns to datetime format
+    for col in ['PC Date In', 'PC Date Out', 'SC/SCP Date In', 'SC/SCP Date Out', 'SCP Date In']:
+        df[col] = pd.to_datetime(df[col], errors='coerce')
 
-    # Filter for PC, SC, SCP cases
-    pc_cases = df[pd.isnull(df['PC Date Out']) & pd.notnull(df['PC Date In'])]
-    sc_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.isnull(df['SCP Date In'])]
-    scp_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.notnull(df['SCP Date In'])]
+    # Determine the current month's start and end
+    current_month_start = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    next_month_start = (current_month_start + pd.offsets.MonthBegin(1)).to_pydatetime()
+
+    # Filter for PC, SC, SCP cases with additional logic
+    pc_cases = df[(df['PC Date In'] <= current_month_start) & 
+                  ((df['PC Date Out'] >= next_month_start) | pd.isnull(df['PC Date Out'])) & 
+                  ((df['SC/SCP Date In'] >= next_month_start) | pd.isnull(df['SC/SCP Date In']))]
+
+    sc_cases = df[(df['SC/SCP Date In'] <= current_month_start) & 
+                  ((df['SC/SCP Date Out'] >= next_month_start) | pd.isnull(df['SC/SCP Date Out'])) & 
+                  ((df['SCP Date In'] >= next_month_start) | pd.isnull(df['SCP Date In']))]
+
+    scp_cases = df[(df['SCP Date In'] <= current_month_start) & 
+                   ((df['SC/SCP Date Out'] >= next_month_start) | pd.isnull(df['SC/SCP Date Out']))]
 
     # Group by 'Group Name' and count cases
     pc_counts = pc_cases.groupby('Group Name').size().rename('PC')
@@ -28,16 +37,24 @@ def StatusGroups(df):
 
 def StatusWorkers(df):
     # Convert date columns to datetime format
-    df['PC Date In'] = pd.to_datetime(df['PC Date In'], errors='coerce')
-    df['PC Date Out'] = pd.to_datetime(df['PC Date Out'], errors='coerce')
-    df['SC/SCP Date In'] = pd.to_datetime(df['SC/SCP Date In'], errors='coerce')
-    df['SC/SCP Date Out'] = pd.to_datetime(df['SC/SCP Date Out'], errors='coerce')
-    df['SCP Date In'] = pd.to_datetime(df['SCP Date In'], errors='coerce')
+    for col in ['PC Date In', 'PC Date Out', 'SC/SCP Date In', 'SC/SCP Date Out', 'SCP Date In']:
+        df[col] = pd.to_datetime(df[col], errors='coerce')
 
-    # Filter for PC, SC, SCP cases
-    pc_cases = df[pd.isnull(df['PC Date Out']) & pd.notnull(df['PC Date In'])]
-    sc_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.isnull(df['SCP Date In'])]
-    scp_cases = df[pd.isnull(df['SC/SCP Date Out']) & pd.notnull(df['SC/SCP Date In']) & pd.notnull(df['SCP Date In'])]
+    # Determine the current month's start and end
+    current_month_start = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    next_month_start = (current_month_start + pd.offsets.MonthBegin(1)).to_pydatetime()
+
+    # Filter for PC, SC, SCP cases with additional logic
+    pc_cases = df[(df['PC Date In'] <= current_month_start) & 
+                  ((df['PC Date Out'] >= next_month_start) | pd.isnull(df['PC Date Out'])) & 
+                  ((df['SC/SCP Date In'] >= next_month_start) | pd.isnull(df['SC/SCP Date In']))]
+
+    sc_cases = df[(df['SC/SCP Date In'] <= current_month_start) & 
+                  ((df['SC/SCP Date Out'] >= next_month_start) | pd.isnull(df['SC/SCP Date Out'])) & 
+                  ((df['SCP Date In'] >= next_month_start) | pd.isnull(df['SCP Date In']))]
+
+    scp_cases = df[(df['SCP Date In'] <= current_month_start) & 
+                   ((df['SC/SCP Date Out'] >= next_month_start) | pd.isnull(df['SC/SCP Date Out']))]
 
     # Group by 'Worker' and count cases
     pc_counts = pc_cases.groupby('Current Worker (Initials)').size().rename('PC Count')

@@ -74,7 +74,6 @@ def AgeDistribution(df):
     fig = px.pie(age_range_counts, values=age_range_counts, names=age_range_counts.index, title='Age Range Distribution',
                  hole=.3, labels={'index':'Age Range', 'value':'Count'})
     fig.update_traces(textinfo='label+percent+value')
-    st.plotly_chart(fig)
 
     # Display the new result table in Streamlit
     if age_range_counts.empty:

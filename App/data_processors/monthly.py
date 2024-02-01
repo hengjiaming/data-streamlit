@@ -26,11 +26,16 @@ def CombinedMonthlyStatusAndCases(df):
     # Cumulative counts
     for month in months_range:
         combined_results.at[month.strftime('%Y-%m'), 'PC'] = df[(df['PC Month In'] <= month) & 
-                                                                ((df['PC Month Out'] > month) | pd.isna(df['PC Month Out'])) & 
-                                                                (df['SC/SCP Month In'] > month)].shape[0]
+                                                                ((df['PC Month Out'] >= month) | pd.isna(df['PC Month Out'])) & 
+                                                                ((df['SC/SCP Month In'] > month) | pd.isna(df['SC/SCP Month In']))].shape[0]
+        
         combined_results.at[month.strftime('%Y-%m'), 'SC'] = df[(df['SC/SCP Month In'] <= month) & 
+                                                                ((df['SC/SCP Month Out'] >= month) | pd.isna(df['SC/SCP Month Out'])) & 
                                                                 ((df['SCP Month In'] > month) | pd.isna(df['SCP Month In']))].shape[0]
-        combined_results.at[month.strftime('%Y-%m'), 'SCP'] = df[df['SCP Month In'] <= month].shape[0]
+        
+        combined_results.at[month.strftime('%Y-%m'), 'SCP'] = df[(df['SCP Month In'] <= month) &
+                                                                 ((df['SC/SCP Month Out'] >= month) | pd.isna(df['SC/SCP Month Out']))].shape[0]
+
         combined_results.at[month.strftime('%Y-%m'), 'SC + SCP'] = combined_results.at[month.strftime('%Y-%m'), 'SC'] + combined_results.at[month.strftime('%Y-%m'), 'SCP']
         combined_results.at[month.strftime('%Y-%m'), 'SC to SCP Transitions'] = df[(df['SC/SCP Month In'] < month) & 
                                                                                    (df['SCP Month In'] == month)].shape[0]

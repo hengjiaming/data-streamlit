@@ -52,6 +52,8 @@ st.markdown('''
 <li class="big-font">SCP Date In</li>
 <li class="big-font">SC/SCP Date Out</li>
 <li class="big-font">Referral Date (Date received)</li>
+<li class="big-font">Referral Source</li>
+<li class="big-font">Successful intake? (Y/N)</li>
 ''', unsafe_allow_html=True)
 
 # File Uploader

@@ -2,30 +2,28 @@ import pandas as pd
 import streamlit as st
 
 def Referrals(df):
-    # Adjust column names based on the actual columns in the dataframe
-    referral_source_column = 'Referral\nSource'
-    successful_intake_column = 'Successful intake? (Y/N)2'
-
-    # Count total referrals
-    total_referrals = df[referral_source_column].notna().sum()
-
-    # Count successful intakes
-    successful_intakes = df[successful_intake_column].value_counts().get('Y', 0)
-
-    # Count referrals by source
-    referrals_by_source = df[referral_source_column].value_counts()
-
-    # Prepare the DataFrame to display in Streamlit
-    # Initialize with Total Referral Count and Number of Successful Intakes
-    summary_df = pd.DataFrame({
-        "Total Referral Count": [total_referrals],
-        "Number of Successful Intakes": [successful_intakes]
-    })
-
-    # Dynamically add each referral source and its count to the summary DataFrame
-    for source, count in referrals_by_source.items():
-        summary_df[f"Source - {source}"] = count
-
+    # Ensure the date column is in datetime format
+    df['Referral Date (Date received)'] = pd.to_datetime(df['Referral Date (Date received)'], errors='coerce')
+    
+    # Extract year and month from the referral date
+    df['Year-Month'] = df['Referral Date (Date received)'].dt.strftime('%Y-%m')
+    
+    # Count total referrals by year-month
+    monthly_referrals = df.groupby('Year-Month').size().rename('Referrals In')
+    
+    # Count successful intakes ('Y') by year-month
+    successful_intakes = df[df['Successful intake? (Y/N)'] == 'Y'].groupby('Year-Month').size().rename('Successful Intakes')
+    
+    # Count referrals by source for each month
+    referrals_by_source = df.pivot_table(index='Year-Month', columns='Referral Source', aggfunc='size', fill_value=0)
+    
+    # Combine the counts into a single DataFrame
+    summary_df = pd.concat([monthly_referrals, referrals_by_source, successful_intakes], axis=1).fillna(0)
+    
     # Display the DataFrame in Streamlit
-    st.markdown("### Referral Summary")
-    st.dataframe(summary_df.transpose().rename(columns={0: 'Count'}), height=600)
+    st.markdown("### Monthly Referral Summary")
+    st.dataframe(summary_df)
+
+# Example usage:
+# df = pd.read_csv("your_data.csv")  # Replace with your actual data loading method
+# Referrals(df)
