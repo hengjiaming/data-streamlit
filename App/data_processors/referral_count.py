@@ -12,10 +12,10 @@ def Referrals(df):
     monthly_referrals = df.groupby('Year-Month').size().rename('Referrals In')
     
     # Count successful intakes ('Y') by year-month
-    successful_intakes = df[df['Successful intake? (Y/N)2'] == 'Y'].groupby('Year-Month').size().rename('Successful Intakes')
+    successful_intakes = df[df['Successful intake? (Y/N)'] == 'Y'].groupby('Year-Month').size().rename('Successful Intakes')
     
     # Count referrals by source for each month
-    referrals_by_source = df.pivot_table(index='Year-Month', columns='Referral\nSource', aggfunc='size', fill_value=0)
+    referrals_by_source = df.pivot_table(index='Year-Month', columns='Referral Source', aggfunc='size', fill_value=0)
     
     # Combine the counts into a single DataFrame
     summary_df = pd.concat([monthly_referrals, referrals_by_source, successful_intakes], axis=1).fillna(0)

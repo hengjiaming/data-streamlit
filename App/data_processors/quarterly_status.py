@@ -35,6 +35,12 @@ def QuartStatus(df):
     quarterly_status_counts['SCP Outs'] = scp_df.groupby('SCP Out Quarter').size().reindex(all_quarters, fill_value=0)
     quarterly_status_counts['Case Closed'] = df.groupby('Case Closed Quarter').size().reindex(all_quarters, fill_value=0)
 
+        # Sidebar filter component
+    # st.sidebar.header("Filters")
+    # if 'Group Name' in df:
+    #     selected_group = st.sidebar.selectbox("Select a Group", df['Group Name'].unique())
+    #     # Use this selection to filter data or modify charts
+
     # Display the new result table in Streamlit
     st.markdown("### Quarterly Status Counts")
     st.dataframe(quarterly_status_counts)

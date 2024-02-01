@@ -29,4 +29,6 @@ data visualisation on streamlit
 11. SCP Date In
 12. SC/SCP Date Out
 13. Referral Date (Date received)
+14. Referral Source
+15. Successful intake? (Y/N)
 
