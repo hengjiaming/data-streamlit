@@ -40,17 +40,18 @@ def CombinedMonthlyStatusAndCases(df):
         combined_results.at[month.strftime('%Y-%m'), 'SC to SCP Transitions'] = df[(df['SC/SCP Month In'] < month) & 
                                                                                    (df['SCP Month In'] == month)].shape[0]
 
-    # In/Out counts
-    combined_results['PC Ins'] = df.groupby('PC Month In').size().reindex(months_range, fill_value=0).values
-    combined_results['PC Outs'] = df.groupby('PC Month Out').size().reindex(months_range, fill_value=0).values
-    combined_results['SC Ins'] = df.groupby('SC/SCP Month In').size().reindex(months_range, fill_value=0).values
-    combined_results['SC Outs'] = df.groupby('SC/SCP Month Out').size().reindex(months_range, fill_value=0).values
-    combined_results['SCP Ins'] = df.groupby('SCP Month In').size().reindex(months_range, fill_value=0).values
-    
+        # In/Out counts
+        combined_results['PC Ins'] = df.groupby('PC Month In').size().reindex(months_range, fill_value=0).values
+        combined_results['PC Outs'] = df.groupby('PC Month Out').size().reindex(months_range, fill_value=0).values
+        for month in months_range:
+            combined_results.at[month.strftime('%Y-%m'), 'SC Ins'] = df[(df['SC/SCP Month In'] == month) &
+                                                                        ((df['SCP Month In'] > month) | pd.isna(df['SCP Month In']))].shape[0]
+        combined_results['SC Outs'] = df.groupby('SC/SCP Month Out').size().reindex(months_range, fill_value=0).values
+        combined_results['SCP Ins'] = df.groupby('SCP Month In').size().reindex(months_range, fill_value=0).values
+
+    columns_ordered = [col for col in combined_results.columns if col != 'SC to SCP Transitions'] + ['SC to SCP Transitions']
+    combined_results = combined_results[columns_ordered]
+
     # Display the new result table in Streamlit
     st.markdown("### Combined Monthly Status and Case Counts")
     st.dataframe(combined_results)
-
-# Example usage:
-# df = pd.read_csv("your_data.csv")  # Make sure to load your data
-# CombinedMonthlyStatusAndCases(df)

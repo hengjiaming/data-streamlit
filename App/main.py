@@ -72,11 +72,11 @@ if file_uploader:
 
     # Function calls with error handling
     functions_to_execute = [
-        (CasesByGroup, "Cases by Group"),
         (CombinedMonthlyStatusAndCases, "Monthly Status and Cases"),
         (WorkerLoad, "Worker Load"),
         (StatusGroups, "Status by Groups"),
         (StatusWorkers, "Status by Workers"),
+        (CasesByGroup, "Cases by Group"),
         (GenderDistribution, "Gender Distribution"),
         (RaceDistribution, "Race Distribution"),
         (AgeDistribution, "Age Distribution"),
