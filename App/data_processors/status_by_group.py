@@ -24,9 +24,9 @@ def StatusGroups(df):
                    ((df['SC/SCP Date Out'] >= next_month_start) | pd.isnull(df['SC/SCP Date Out']))]
 
     # Group by 'Group Name' and count cases
-    pc_counts = pc_cases.groupby('Group Name').size().rename('PC')
-    sc_counts = sc_cases.groupby('Group Name').size().rename('SC')
-    scp_counts = scp_cases.groupby('Group Name').size().rename('SCP')
+    pc_counts = pc_cases.groupby('Group Name').size().rename('PC Count')
+    sc_counts = sc_cases.groupby('Group Name').size().rename('SC Count')
+    scp_counts = scp_cases.groupby('Group Name').size().rename('SCP Count')
 
     # Combine counts into a single DataFrame
     combined_counts = pd.concat([pc_counts, sc_counts, scp_counts], axis=1).fillna(0)
