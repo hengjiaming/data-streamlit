@@ -25,14 +25,14 @@ css = styles
 st.markdown(css, unsafe_allow_html=True)
 
 # Header
-st.markdown('<p class="header">Streamlit Data Analysis Demonstration</p>', unsafe_allow_html=True)
+st.markdown('<p class="header">Streamlit Data Analysis Project</p>', unsafe_allow_html=True)
 
 st.markdown('''
 <p class="big-font">This dashboard provides a dynamic and interactive way to explore 
-your data. Use the filters in the sidebar to customize the data and charts displayed. Instructions for usage as follows:</p>
+your data. Instructions for usage as follows:</p>
 ''', unsafe_allow_html=True)
 st.markdown('''
-<li class="big-font">Access the deployed web application via URL:</li>
+<li class="big-font">Access the deployed web application via URL</li>
 <li class="big-font">Drag and drop or upload excel file into the upload box. Refer to sample excel file for required formatting. (Note that the column headers found in the sample excel file are required and should not be renamed or removed)</li>
 <li class="big-font">Let the web application load and generate the analysis charts</li>
 <li class="big-font">Download the necessary chart data before you close the application since no data is going to be stored.</li>
